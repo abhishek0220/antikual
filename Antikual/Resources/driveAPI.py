@@ -20,13 +20,24 @@ class getFiles(Resource):
     ]
     def get(self):
         file_name = request.args.get('name','').strip()
+        nextpagetoken = request.args.get('nextpagetoken', None)
         #if(len(file_name) < 3):
          #   return Response(json.dumps({'message': 'Send atleast 3 initials'}), status=403, mimetype='application/json')
-        fields_to_get = 'id,name,mimeType,webViewLink,thumbnailLink,owners(displayName,emailAddress)'
-        files_resp = drive_service.files().list(
-            pageSize=10,
-            orderBy='name',
-            q = f"name contains '{file_name}'",
-            fields=f'nextPageToken, files({fields_to_get})'
-            ).execute()
-        return files_resp
+        if nextpagetoken == None:
+            fields_to_get = 'id,name,mimeType,webViewLink,thumbnailLink,owners(displayName,emailAddress)'
+            files_resp = drive_service.files().list(
+                pageSize=10,
+                orderBy='name',
+                q = f"name contains '{file_name}'",
+                fields=f'nextPageToken, files({fields_to_get})'
+                ).execute()
+            return files_resp
+        else:
+            files_resp = drive_service.files().list(
+                pageSize=10,
+                orderBy='name',
+                q = f"name contains '{file_name}'",
+                fields=f'nextPageToken, files({fields_to_get})',
+                pageToken=nextpagetoken
+                ).execute()
+            return files_resp
