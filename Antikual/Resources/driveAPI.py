@@ -20,8 +20,8 @@ class getFiles(Resource):
     ]
     def get(self):
         file_name = request.args.get('name','').strip()
-        if(len(file_name) < 3):
-            return Response(json.dumps({'message': 'Send atleast 3 initials'}), status=403, mimetype='application/json')
+        #if(len(file_name) < 3):
+         #   return Response(json.dumps({'message': 'Send atleast 3 initials'}), status=403, mimetype='application/json')
         fields_to_get = 'id,name,mimeType,webViewLink,thumbnailLink,owners(displayName,emailAddress)'
         files_resp = drive_service.files().list(
             pageSize=10,
