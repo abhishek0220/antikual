@@ -25,6 +25,7 @@ class getFiles(Resource):
         fields_to_get = 'id,name,mimeType,webViewLink,thumbnailLink,owners(displayName,emailAddress)'
         files_resp = drive_service.files().list(
             pageSize=10,
+            orderBy='name',
             q = f"name contains '{file_name}'",
             fields=f'nextPageToken, files({fields_to_get})'
             ).execute()
