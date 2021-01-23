@@ -24,7 +24,7 @@ class getFiles(Resource):
             return Response(json.dumps({'message': 'Send atleast 3 initials'}), status=403, mimetype='application/json')
         fields_to_get = 'id,name,mimeType,webViewLink,thumbnailLink,owners(displayName,emailAddress)'
         files_resp = drive_service.files().list(
-            pageSize=5,
+            pageSize=10,
             q = f"name contains '{file_name}'",
             fields=f'nextPageToken, files({fields_to_get})'
             ).execute()
