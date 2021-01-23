@@ -19,6 +19,13 @@ class getFiles(Resource):
         limiter.limit("5/second", key_func=get_remote_address, methods=["GET"])
     ]
     def get(self):
-        return drive_service.files().list(
-            fields='nextPageToken, files(id, name)'
+        file_name = request.args.get('name','').strip()
+        if(len(file_name) < 3):
+            return Response(json.dumps({'message': 'Send atleast 3 initials'}), status=403, mimetype='application/json')
+        fields_to_get = 'id,name,mimeType,webViewLink,thumbnailLink,owners(displayName,emailAddress)'
+        files_resp = drive_service.files().list(
+            pageSize=5,
+            q = f"name contains '{file_name}'",
+            fields=f'nextPageToken, files({fields_to_get})'
             ).execute()
+        return files_resp
